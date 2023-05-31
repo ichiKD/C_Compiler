@@ -3,7 +3,7 @@
 using namespace std;
 
 struct Token{
-	int n;					//number of tokens
+	int n, line;					//number of tokens
 	string token[1024];
 	string token_type[1024];
 };
@@ -11,9 +11,16 @@ struct Token{
 Token lexicalanalysis(string code){
 	Token X;
 	int n=0;
+	int line=0;
 	int L=code.length();
 	for(int i=0; i<L; ){
 		if(code[i]==' ' || code[i]=='\t' || code[i]== '\n'){
+			i++;
+		}
+		else if(code[i]==';'){
+			X.token[n]=";";
+			X.token_type[n]="SEMICOLAN";
+			n++;
 			i++;
 		}
 		else if(code.substr(i, 3)=="int"){
@@ -134,9 +141,210 @@ Token lexicalanalysis(string code){
 			n++;
 			i++;
 		}
+		else if(code[i]='('){
+			X.token[n]="(";
+			X.token_type[n]="LEFT PARENTHESES";
+			n++;
+			i++;
+		}
+		else if(code[i]=')'){
+			X.token[n]=")";
+			X.token_type[n]="RIGHT PARENTHESES";
+			n++;
+			i++;
+		}
+		else if(code[i]='['){
+			X.token[n]="[";
+			X.token_type[n]="LEFT SQUARE BRACKET";
+			n++;
+			i++;
+		}
+		else if(code[i]=']'){
+			X.token[n]="]";
+			X.token_type[n]="RIGHT SQUARE BRACKET";
+			n++;
+			i++;
+		}
+		else if(code.substr(i, 2)=="+="){
+			X.token[n]="+=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="-="){
+			X.token[n]="-=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="*="){
+			X.token[n]="*=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="/="){
+			X.token[n]="/=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="%="){
+			X.token[n]="%=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+2;
+		}
+		else if(code[i]=='=' && code[i+1]!= '='){
+			X.token[n]="=";
+			X.token_type[n]="ASSIGNMENT";
+			n++;
+			i=i+1;
+		}
+		else if(code.substr(i, 2)=="=="){
+			X.token[n]="==";
+			X.token_type[n]="COMPARISON";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)==">="){
+			X.token[n]=">=";
+			X.token_type[n]="COMPARISON";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="<="){
+			X.token[n]=">=";
+			X.token_type[n]="COMPARISON";
+			n++;
+			i=i+2;
+		}
+		else if(code[i]=="<"){
+			X.token[n]="<";
+			X.token_type[n]="COMPARISON";
+			n++;
+			i++;
+		}
+		else if(code[i]==">"){
+			X.token[n]=">";
+			X.token_type[n]="COMPARISON";
+			n++;
+			i++;
+		}
+		else if(code[i]=="!"){
+			X.token[n]="!";
+			X.token_type[n]="BOOLEAN OPERATOR";
+			n++;
+			i++;
+		}
+		else if(code.substr(i, 2)=="&&"){
+			X.token[n]="&&";
+			X.token_type[n]="BOOLEAN OPERATOR";
+			n++;
+			i=i+2;
+		}
+		else if(code.substr(i, 2)=="||"){
+			X.token[n]="||";
+			X.token_type[n]="BOOLEAN OPERATOR";
+			n++;
+			i=i+2;
+		}
+		else if(code[i]=="+"){
+			X.token[n]="+";
+			X.token_type[n]="ADDITION";
+			n++;
+			i++;
+		}
+		else if(code[i]=="-"){
+			X.token[n]="-";
+			X.token_type[n]="SUBTRACTION";
+			n++;
+			i++;
+		}
+		else if(code[i]=="*"){
+			X.token[n]="*";
+			X.token_type[n]="MULTIPLICATION";
+			n++;
+			i++;
+		}
+		else if(code[i]=="*"){
+			X.token[n]="*";
+			X.token_type[n]="DIVISION";
+			n++;
+			i++;
+		}
+		else if(code[i]=="%"){
+			X.token[n]="%";
+			X.token_type[n]="MOD";
+			n++;
+			i++;
+		}
+		else if(code[i]=='\"'){
+			X.token[n]="\"";
+			i++;
+			while(code[i]!='\"'){
+				X.token[n]+=code[i];
+			}
+			X.token[n]+='\"'
+			X.token_type[n]="STRING LITERAL";
+			n++
+			i++;
+		}
+		else if(code[i]=='\'' && code[i+2]=='\''){
+			X.token[n]=code[i+1];
+			X.token_type[n]="CHAR LITERAL";
+			n++;
+			i+=3;
+		}
+		else if(code[i]=>'0' && code[i]<=9){
+			int check=1;
+			int index=i;
+			while(code[index]=>'0' && code[index]<=9){
+				index++;
+			}
+			if(code[index]=='.'){
+				check=0;
+			}
+			if(check){
+				// interger
+				X.token[n]="";
+				while(code[i]=>'0' && code[i]<=9){
+					X.token[n]+=code[i];
+					i++;
+				}
+				X.token_type[n]="INT LITERAL";
+				n++;
+			}
+			else{
+				// float
+				X.token[n]="";
+				while(code[i]=>'0' && code[i]<=9){
+					X.token[n]+=code[i];
+					i++;
+				}
+				X.token+=".";
+				i++;
+				while(code[i]=>'0' && code[i]<=9){
+					X.token[n]+=code[i];
+					i++;
+				}
+				X.token_type[n]="FLOAT LITERAL";
+				n++;
+			}
+		}
+		else if((code[i]>='a' &&code[i]<='z') || (code[i]>='A' &&code[i]<='Z') || code[i]=='_'){
+			X.token[n]="";
+			while((code[i]>='a' &&code[i]<='z') || (code[i]>='A' &&code[i]<='Z') || code[i]=='_')){
+				X.token[n]+=code[i];
+				i++;
+			}
+			X.token_type[n]="VARIABLE";
+			n++;
+		}
 		cout<<X.token[n-1]<<"\n";
 	}
 	X.n=n;
+	X.line=line;
 	return X;
 }
 
