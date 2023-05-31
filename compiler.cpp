@@ -8,6 +8,13 @@ struct Token{
 	string token_type[1024];
 };
 
+struct ParseTree {
+	string tree[1024];
+	bool purpose[1024]; 				// 0 if node is a terminal and 1 if node is a operator
+};
+
+string productionrule[1024];
+
 Token lexicalanalysis(string code){
 	Token X;
 	int n=0;
@@ -40,6 +47,12 @@ Token lexicalanalysis(string code){
 			X.token_type[n]="variable specifier";
 			n++;
 			i=i+5;
+		}
+		else if(code.substr(i, 4)=="void"){
+			X.token[n]="void";
+			X.token_type[n]="variable specifier";
+			n++;
+			i=i+4;
 		}
 		else if(code.substr(i, 3)=="for"){
 			X.token[n]="for";
@@ -341,12 +354,28 @@ Token lexicalanalysis(string code){
 			X.token_type[n]="VARIABLE";
 			n++;
 		}
-		cout<<X.token[n-1]<<"     "<< X.token_type[n-1]<<"\n";
 	}
 	X.n=n;
 	X.line=line;
 	return X;
 }
+
+
+ParseTree syntacticalanalysis(Token X){
+	ParseTree Z;
+	// note: I use space between terminals and non-terminals
+	productionrule[0]= "S --> void A return ; }/ int A return INTLITERAL ; }/ char A return CHARLITERAL ; }/ float A return FLOATLITERAL ; }";
+	productionrule[1]= "A --> main ( ) { B ";
+	productionrule[2]= "B --> C B/ ε";
+	productionrule[3]= "C --> D ;";
+	productionrule[4]= "D --> E/ F/ scanf(\"\", )/ printf(\"\", )";
+	productionrule[5]= "E --> int variable = G/ char variable =H/ float variable = I";
+	productionrule[6]= "G --> INTLITERAL/ J";
+	
+	return Z;
+}
+
+
 
 
 int main(){
@@ -363,5 +392,11 @@ int main(){
 	cout<<"****** CODE READ SUCESSFULLY ******\n";
 	
 	Token code_tokens=lexicalanalysis(code);
+	for(int i=0; i<code_tokens.n; i++){
+		cout<<code_tokens.token[i]<<"         "<< code_tokens.token_type[i]<<"\n";
+	}
+	cout<<"****** CODE SUCESSFULLY CONVERTED TO TOKENS ******\n";
+	
+	ParseTree code_ParseTree=syntacticalanalysis(code_tokens);
 	return 0;
 }
