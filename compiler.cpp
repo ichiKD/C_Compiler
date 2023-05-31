@@ -364,13 +364,19 @@ Token lexicalanalysis(string code){
 ParseTree syntacticalanalysis(Token X){
 	ParseTree Z;
 	// note: I use space between terminals and non-terminals
-	productionrule[0]= "S --> void A return ; }/ int A return INTLITERAL ; }/ char A return CHARLITERAL ; }/ float A return FLOATLITERAL ; }";
+	productionrule[0]= "S --> void A return ; }/  int A return INTLITERAL ; }/  char A return CHARLITERAL ; }/  float A return FLOATLITERAL ; }";
 	productionrule[1]= "A --> main ( ) { B ";
-	productionrule[2]= "B --> C B/ ε";
+	productionrule[2]= "B --> C B/  ε";
 	productionrule[3]= "C --> D ;";
-	productionrule[4]= "D --> E/ F/ scanf(\"\", )/ printf(\"\", )";
-	productionrule[5]= "E --> int variable = G/ char variable =H/ float variable = I";
-	productionrule[6]= "G --> INTLITERAL/ J";
+	productionrule[4]= "D --> E/  F/  G/  scanf(\"\", )/  printf(\"\", )";
+	productionrule[5]= "E --> int variable = H/  char variable =H/  float variable = H";
+	productionrule[6]= "H --> I/  H + I/  H - I";
+	productionrule[7]= "I --> J/  I * J/  I / J/  I % J";
+	productionrule[8]= "J --> variable/ LITERAL";	
+	productionrule[9]= "F --> if ( H ) { B } L";	
+	productionrule[10]= "L --> else F/  else { B }/  ε";
+	productionrule[11]= "G --> while ( H )/  for ( E ;  H ; H ) { B }";
+	
 	
 	return Z;
 }
