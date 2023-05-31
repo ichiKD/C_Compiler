@@ -101,7 +101,7 @@ Token lexicalanalysis(string code){
 			n++;
 			i=i+6;
 		}
-		else if(code.substr(i, 7)=="printf"){
+		else if(code.substr(i, 6)=="printf"){
 			X.token[n]="printf(";
 			X.token_type[n]="SPECIAL FUNCTION";
 			i=i+7;
@@ -112,7 +112,7 @@ Token lexicalanalysis(string code){
 			X.token[n]+=")";
 			n++;
 		}
-		else if(code.substr(i, 6)=="scanf("){
+		else if(code.substr(i, 5)=="scanf"){
 			X.token[n]="scanf(";
 			X.token_type[n]="SPECIAL FUNCTION";
 			i=i+6;
@@ -129,37 +129,37 @@ Token lexicalanalysis(string code){
 			n++;
 			i=i+4;
 		}
-		else if(code[i]='{'){
+		else if(code[i]=='{'){
 			X.token[n]="{";
 			X.token_type[n]="LEFT BRACES";
 			n++;
 			i++;
 		}
-		else if(code[i]='}'){
+		else if(code[i]=='}'){
 			X.token[n]="}";
 			X.token_type[n]="RIGHT BRACES";
 			n++;
 			i++;
 		}
-		else if(code[i]='('){
+		else if(code[i]=='('){
 			X.token[n]="(";
 			X.token_type[n]="LEFT PARENTHESES";
 			n++;
 			i++;
 		}
-		else if(code[i]=')'){
+		else if(code[i]==')'){
 			X.token[n]=")";
 			X.token_type[n]="RIGHT PARENTHESES";
 			n++;
 			i++;
 		}
-		else if(code[i]='['){
+		else if(code[i]=='['){
 			X.token[n]="[";
 			X.token_type[n]="LEFT SQUARE BRACKET";
 			n++;
 			i++;
 		}
-		else if(code[i]=']'){
+		else if(code[i]==']'){
 			X.token[n]="]";
 			X.token_type[n]="RIGHT SQUARE BRACKET";
 			n++;
@@ -199,7 +199,7 @@ Token lexicalanalysis(string code){
 			X.token[n]="=";
 			X.token_type[n]="ASSIGNMENT";
 			n++;
-			i=i+1;
+			i++;;
 		}
 		else if(code.substr(i, 2)=="=="){
 			X.token[n]="==";
@@ -219,19 +219,19 @@ Token lexicalanalysis(string code){
 			n++;
 			i=i+2;
 		}
-		else if(code[i]=="<"){
+		else if(code[i]=='<'){
 			X.token[n]="<";
 			X.token_type[n]="COMPARISON";
 			n++;
 			i++;
 		}
-		else if(code[i]==">"){
+		else if(code[i]=='>'){
 			X.token[n]=">";
 			X.token_type[n]="COMPARISON";
 			n++;
 			i++;
 		}
-		else if(code[i]=="!"){
+		else if(code[i]=='!'){
 			X.token[n]="!";
 			X.token_type[n]="BOOLEAN OPERATOR";
 			n++;
@@ -249,31 +249,31 @@ Token lexicalanalysis(string code){
 			n++;
 			i=i+2;
 		}
-		else if(code[i]=="+"){
+		else if(code[i]=='+'){
 			X.token[n]="+";
 			X.token_type[n]="ADDITION";
 			n++;
 			i++;
 		}
-		else if(code[i]=="-"){
+		else if(code[i]=='-'){
 			X.token[n]="-";
 			X.token_type[n]="SUBTRACTION";
 			n++;
 			i++;
 		}
-		else if(code[i]=="*"){
+		else if(code[i]=='*'){
 			X.token[n]="*";
 			X.token_type[n]="MULTIPLICATION";
 			n++;
 			i++;
 		}
-		else if(code[i]=="*"){
+		else if(code[i]=='*'){
 			X.token[n]="*";
 			X.token_type[n]="DIVISION";
 			n++;
 			i++;
 		}
-		else if(code[i]=="%"){
+		else if(code[i]=='%'){
 			X.token[n]="%";
 			X.token_type[n]="MOD";
 			n++;
@@ -285,9 +285,9 @@ Token lexicalanalysis(string code){
 			while(code[i]!='\"'){
 				X.token[n]+=code[i];
 			}
-			X.token[n]+='\"'
+			X.token[n]+='\"';
 			X.token_type[n]="STRING LITERAL";
-			n++
+			n++;
 			i++;
 		}
 		else if(code[i]=='\'' && code[i+2]=='\''){
@@ -296,10 +296,10 @@ Token lexicalanalysis(string code){
 			n++;
 			i+=3;
 		}
-		else if(code[i]=>'0' && code[i]<=9){
+		else if(code[i]>='0' && code[i]<='9'){
 			int check=1;
 			int index=i;
-			while(code[index]=>'0' && code[index]<=9){
+			while(code[index]>='0' && code[index]<='9'){
 				index++;
 			}
 			if(code[index]=='.'){
@@ -308,7 +308,7 @@ Token lexicalanalysis(string code){
 			if(check){
 				// interger
 				X.token[n]="";
-				while(code[i]=>'0' && code[i]<=9){
+				while(code[i]>='0' && code[i]<='9'){
 					X.token[n]+=code[i];
 					i++;
 				}
@@ -318,13 +318,13 @@ Token lexicalanalysis(string code){
 			else{
 				// float
 				X.token[n]="";
-				while(code[i]=>'0' && code[i]<=9){
+				while(code[i]>='0' && code[i]<='9'){
 					X.token[n]+=code[i];
 					i++;
 				}
-				X.token+=".";
+				X.token[n]+=".";
 				i++;
-				while(code[i]=>'0' && code[i]<=9){
+				while(code[i]>='0' && code[i]<='9'){
 					X.token[n]+=code[i];
 					i++;
 				}
@@ -334,14 +334,14 @@ Token lexicalanalysis(string code){
 		}
 		else if((code[i]>='a' &&code[i]<='z') || (code[i]>='A' &&code[i]<='Z') || code[i]=='_'){
 			X.token[n]="";
-			while((code[i]>='a' &&code[i]<='z') || (code[i]>='A' &&code[i]<='Z') || code[i]=='_')){
+			while((code[i]>='a' &&code[i]<='z') || (code[i]>='A' &&code[i]<='Z') || code[i]=='_'){
 				X.token[n]+=code[i];
 				i++;
 			}
 			X.token_type[n]="VARIABLE";
 			n++;
 		}
-		cout<<X.token[n-1]<<"\n";
+		cout<<X.token[n-1]<<"     "<< X.token_type[n-1]<<"\n";
 	}
 	X.n=n;
 	X.line=line;
